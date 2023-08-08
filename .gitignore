@@ -31,6 +31,9 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+#Fichier que je veux pas envoyer sur Github car la donnée API est confidentielle
+# J'ai simplement fait clic droit et prendre le chemin relatif
+lib\services\api_key.dart 
 
 # Symbolication related
 app.*.symbols
