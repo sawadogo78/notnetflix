@@ -65,4 +65,62 @@ class APIService {
       throw response;
     }
   }
+
+  Future<List<Movie>> getUpcomingMovies({required int pageNumber}) async {
+    Response response = await getData('/movie/upcoming', params: {
+      'page': pageNumber,
+    });
+    if (response.statusCode == 200) {
+      Map data = response.data; // Our data output in a json format
+      // Professional way to deal with for loop in flutter and dart
+      List<Movie> movies = data['results'].map<Movie>((dynamic jsonMovie) {
+        return Movie.fromJson(jsonMovie);
+      }).toList();
+
+      return movies;
+    } else {
+      throw response;
+    }
+  }
+
+  Future<List<Movie>> getAnimationMovies({required int pageNumber}) async {
+    Response response = await getData(
+      '/discover/movie',
+      params: {
+        'page': pageNumber,
+        'with_genres': '16',
+      },
+    );
+    if (response.statusCode == 200) {
+      Map data = response.data; // Our data output in a json format
+      // Professional way to deal with for loop in flutter and dart
+      List<Movie> movies = data['results'].map<Movie>((dynamic jsonMovie) {
+        return Movie.fromJson(jsonMovie);
+      }).toList();
+
+      return movies;
+    } else {
+      throw response;
+    }
+  }
+
+  Future<Movie> getMovieDetails({required Movie movie}) async {
+    Response response = await getData('movie/${movie.id}');
+    if (response.statusCode == 200) {
+      Map<String, dynamic> _data = response.data;
+      var genres = _data['genres'] as List;
+      List<String> genreList = genres.map((item) {
+        return item['name'] as String;
+      }).toList();
+      Movie newMovie = movie.copyWith(
+        genres: genreList,
+        realiseDate: _data['release_date'],
+        vote: _data['vote_average'],
+      );
+
+      return newMovie;
+    } else {
+      throw response;
+    }
+  }
 }
