@@ -7,7 +7,7 @@ import 'package:notnetflix/services/api.dart';
 
 class Movie {
   final int id;
-  final String title;
+  final String name;
   final String overview;
   final String? posterPath;
   final List<String>? genres;
@@ -16,7 +16,7 @@ class Movie {
 
   Movie({
     required this.id,
-    required this.title,
+    required this.name,
     required this.overview,
     this.posterPath,
     this.genres,
@@ -26,7 +26,7 @@ class Movie {
 
   Movie copyWith({
     int? id,
-    String? title,
+    String? name,
     String? overview,
     String? posterPath,
     List<String>? genres,
@@ -35,7 +35,7 @@ class Movie {
   }) {
     return Movie(
       id: id ?? this.id,
-      title: title ?? this.title,
+      name: name ?? this.name,
       overview: overview ?? this.overview,
       posterPath: posterPath ?? this.posterPath,
       genres: genres ?? this.genres,
@@ -48,7 +48,7 @@ class Movie {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'title': title,
+      'name': name,
       'overview': overview,
       'posterPath': posterPath,
       'genres': genres,
@@ -59,17 +59,13 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> map) {
     return Movie(
-      id: map['id'] as int,
-      title: map['title'] as String,
-      overview: map['overview'] as String,
-      posterPath:
-          map['posterPath'] != null ? map['posterPath'] as String : null,
-      genres: map['genres'] != null
-          ? List<String>.from((map['genres'] as List<String>))
-          : null,
-      realiseDate:
-          map['realiseDate'] != null ? map['realiseDate'] as String : null,
-      vote: map['vote'] != null ? map['vote'] as double : null,
+      id: map['id'],
+      name: map['title'],
+      overview: map['overview'],
+      posterPath: map['poster_path'],
+      // genres: map['genres'],
+      // realiseDate: map['release_date'],
+      // vote: map['vote_average'],
     );
   }
 
@@ -79,6 +75,7 @@ class Movie {
       if (i == genres!.length - 1) {
         categories = categories + genres![i];
       } else {
+        // ignore: prefer_interpolation_to_compose_strings
         categories = categories + '${genres![i]}, ';
       }
     }
@@ -100,7 +97,7 @@ class Movie {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.title == title &&
+        other.name == name &&
         other.overview == overview &&
         other.posterPath == posterPath &&
         listEquals(other.genres, genres) &&
@@ -111,7 +108,7 @@ class Movie {
   @override
   int get hashCode {
     return id.hashCode ^
-        title.hashCode ^
+        name.hashCode ^
         overview.hashCode ^
         posterPath.hashCode ^
         genres.hashCode ^

@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:dio/dio.dart';
 import 'package:notnetflix/models/movie.dart';
 import 'package:notnetflix/services/api.dart';
@@ -8,8 +10,8 @@ class APIService {
 
   Future<Response> getData(String path, {Map<String, dynamic>? params}) async {
     // Let build our URL witch will be called
-    // ignore: no_leading_underscores_for_local_identifiers
-    String _url = api.baseUrl + path;
+
+    String url = api.baseUrl + path;
     // Here we build paramters for the request
     Map<String, dynamic> query = {
       'api_key': api.apikey,
@@ -22,7 +24,7 @@ class APIService {
 
     // Making API request call with get method using dio package
 
-    final response = await dio.get(_url, queryParameters: query);
+    final response = await dio.get(url, queryParameters: query);
     if (response.statusCode == 200) {
       return response;
     } else {

@@ -57,7 +57,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                Text(newMovie!.title)
+                Text(newMovie!.name)
               ],
             ),
     );
