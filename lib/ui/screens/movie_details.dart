@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:notnetflix/models/movie.dart';
 import 'package:notnetflix/repositories/data_repository.dart';
+import 'package:notnetflix/ui/widgets/movie_infos.dart';
 import 'package:notnetflix/utils/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +19,6 @@ class MovieDetailsPage extends StatefulWidget {
 
 class _MovieDetailsPageState extends State<MovieDetailsPage> {
   Movie? newMovie;
-
   @override
   void initState() {
     super.initState();
@@ -26,7 +27,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
   void getMovieData() async {
     final dataProvider = Provider.of<DataRepository>(context, listen: false);
-    // Get Movie details
     Movie _movie = await dataProvider.getMovieDetails(movie: widget.movie);
     setState(() {
       newMovie = _movie;
@@ -43,8 +43,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       body: newMovie == null
           ? Center(
               child: SpinKitFadingCircle(
-                size: 40,
                 color: kPrimaryColor,
+                size: 40,
               ),
             )
           : ListView(
@@ -54,10 +54,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                   width: MediaQuery.of(context).size.width,
                   color: Colors.red,
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Text(newMovie!.name)
+                MovieInfos(movie: newMovie!),
               ],
             ),
     );
