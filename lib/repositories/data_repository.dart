@@ -86,23 +86,35 @@ class DataRepository with ChangeNotifier {
     }
   }
 
+// On remplace toutes ces 4 requêtes par la nouvelle function getMovie
+// cela reduit les frais liés au appells API
+  // Future<Movie> getMovieDetails({required Movie movie}) async {
+  //   try {
+
+  //     // get movie infos
+  //     Movie newMovie = await _apiService.getMovieDetails(movie: movie);
+  //     // get movie videos
+  //     newMovie = await _apiService.getMovieVideos(movie: newMovie);
+  //     // get movie casting
+  //     newMovie = await _apiService.getMovieCast(movie: newMovie);
+  //     // get movie images
+  //     newMovie = await _apiService.getMovieImage(movie: newMovie);
+
+  //     // get Movie, qui remplace les 4 requêtes, application performantes
+
+  //     return newMovie;
+  //   } on Response catch (response) {
+  //     print('Error : ${response.statusCode}');
+  //     rethrow;
+  //   }
+  // }
+
   Future<Movie> getMovieDetails({required Movie movie}) async {
     try {
-      // On remplace toutes ces 4 requêtes par la nouvelle function getMovie
-      // // get movie infos
-      // Movie newMovie = await _apiService.getMovieDetails(movie: movie);
-      // // get movie videos
-      // newMovie = await _apiService.getMovieVideos(movie: newMovie);
-      // // get movie casting
-      // newMovie = await _apiService.getMovieCast(movie: newMovie);
-      // // get movie images
-      // newMovie = await _apiService.getMovieImage(movie: newMovie);
-
-      // get Movie, qui remplace les 4 requêtes, application performantes
       Movie newMovie = await _apiService.getMovie(movie: movie);
       return newMovie;
     } on Response catch (response) {
-      print('Error : ${response.statusCode}');
+      print("ERROR : ${response.statusCode}");
       rethrow;
     }
   }

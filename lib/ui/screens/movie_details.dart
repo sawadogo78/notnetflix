@@ -129,7 +129,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     height: 15,
                   ),
                   Text(
-                    'Galerrie',
+                    'Galerie',
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 18.0,

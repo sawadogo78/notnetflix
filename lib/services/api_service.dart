@@ -109,111 +109,109 @@ class APIService {
 
 // La dernière function getMovie remplace l'ensemble des fucntions commentés pour un souci de performance et payer moins les frais liés au requêtes API
 
-  // Future<Movie> getMovieDetails({required Movie movie}) async {
-  //   Response response = await getData('/movie/${movie.id}');
-  //   if (response.statusCode == 200) {
-  //     Map<String, dynamic> _data = response.data;
-  //     var genres = _data['genres'] as List;
-  //     List<String> genreList = genres.map((item) {
-  //       return item['name'] as String;
-  //     }).toList();
-  //     Movie newMovie = movie.copyWith(
-  //       genres: genreList,
-  //       realiseDate: _data['release_date'],
-  //       vote: _data['vote_average'],
-  //     );
+  Future<Movie> getMovieDetails({required Movie movie}) async {
+    Response response = await getData('/movie/${movie.id}');
+    if (response.statusCode == 200) {
+      Map<String, dynamic> _data = response.data;
+      var genres = _data['genres'] as List;
+      List<String> genreList = genres.map((item) {
+        return item['name'] as String;
+      }).toList();
+      Movie newMovie = movie.copyWith(
+        genres: genreList,
+        realiseDate: _data['release_date'],
+        vote: _data['vote_average'],
+      );
 
-  //     return newMovie;
-  //   } else {
-  //     throw response;
-  //   }
-  // }
+      return newMovie;
+    } else {
+      throw response;
+    }
+  }
 
-  // Future<Movie> getMovieVideos({required Movie movie}) async {
-  //   Response response = await getData('/movie/${movie.id}/videos');
-  //   if (response.statusCode == 200) {
-  //     Map _data = response.data;
-  //     List<String> videokeys = _data['results'].map<String>((videoJson) {
-  //       return videoJson['key'] as String;
-  //     }).toList();
-  //     return movie.copyWith(videos: videokeys);
-  //   } else {
-  //     throw response;
-  //   }
-  // }
+  Future<Movie> getMovieVideos({required Movie movie}) async {
+    Response response = await getData('/movie/${movie.id}/videos');
+    if (response.statusCode == 200) {
+      Map _data = response.data;
+      List<String> videokeys = _data['results'].map<String>((videoJson) {
+        return videoJson['key'] as String;
+      }).toList();
+      return movie.copyWith(videos: videokeys);
+    } else {
+      throw response;
+    }
+  }
 
-  // Future<Movie> getMovieCast({required Movie movie}) async {
-  //   Response response = await getData('/movie/${movie.id}/credits');
-  //   if (response.statusCode == 200) {
-  //     Map _data = response.data;
-  //     List<Person> _casting = _data['cast'].map<Person>((dynamic personJson) {
-  //       return Person.fromJson(personJson);
-  //     }).toList();
-  //     return movie.copyWith(casting: _casting);
-  //   } else {
-  //     throw response;
-  //   }
-  // }
+  Future<Movie> getMovieCast({required Movie movie}) async {
+    Response response = await getData('/movie/${movie.id}/credits');
+    if (response.statusCode == 200) {
+      Map _data = response.data;
+      List<Person> _casting = _data['cast'].map<Person>((dynamic personJson) {
+        return Person.fromJson(personJson);
+      }).toList();
+      return movie.copyWith(casting: _casting);
+    } else {
+      throw response;
+    }
+  }
 
-  // Future<Movie> getMovieImage({required Movie movie}) async {
-  //   Response response = await getData(
-  //     '/movie/${movie.id}/images',
-  //     params: {
-  //       'include_image_language': 'null',
-  //     },
-  //   );
-  //   if (response.statusCode == 200) {
-  //     Map _data = response.data;
-  //     List<String> _imagePath =
-  //         _data['backdrops'].map<String>((dynamic imageJson) {
-  //       return imageJson['file_path'] as String;
-  //     }).toList();
-  //     return movie.copyWith(images: _imagePath);
-  //   } else {
-  //     throw response;
-  //   }
-  // }
-
-// Making app more performant by combining requests
-  Future<Movie> getMovie({required Movie movie}) async {
+  Future<Movie> getMovieImage({required Movie movie}) async {
     Response response = await getData(
-      '/movie/${movie.id}/',
+      '/movie/${movie.id}/images',
       params: {
         'include_image_language': 'null',
-        'append_to_response': 'videos,images,credits'
       },
     );
+    if (response.statusCode == 200) {
+      Map _data = response.data;
+      List<String> _imagePath =
+          _data['backdrops'].map<String>((dynamic imageJson) {
+        return imageJson['file_path'] as String;
+      }).toList();
+      return movie.copyWith(images: _imagePath);
+    } else {
+      throw response;
+    }
+  }
+
+// Making app more performant by combining requests
+
+  Future<Movie> getMovie({required Movie movie}) async {
+    Response response = await getData('/movie/${movie.id}', params: {
+      'include_image_language': 'null',
+      'append_to_response': 'videos,images,credits',
+    });
 
     if (response.statusCode == 200) {
       Map _data = response.data;
 
-      // get genres data
+      // on recupère les genres
       var genres = _data['genres'] as List;
       List<String> genreList = genres.map((item) {
         return item['name'] as String;
       }).toList();
 
-      // get movies
-      List<String> videokeys =
+      // on recupère les vidéos
+      List<String> videoKeys =
           _data['videos']['results'].map<String>((videoJson) {
         return videoJson['key'] as String;
       }).toList();
 
-// get images
-      List<String> _imagePath =
+      // on recupère les photos
+      List<String> imagePath =
           _data['images']['backdrops'].map<String>((dynamic imageJson) {
         return imageJson['file_path'] as String;
       }).toList();
 
-      // get movie cast
+      // on recupère le casting
       List<Person> _casting =
           _data['credits']['cast'].map<Person>((dynamic personJson) {
         return Person.fromJson(personJson);
       }).toList();
 
       return movie.copyWith(
-        videos: videokeys,
-        images: _imagePath,
+        videos: videoKeys,
+        images: imagePath,
         casting: _casting,
         genres: genreList,
         realiseDate: _data['release_date'],
