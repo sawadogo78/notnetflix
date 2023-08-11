@@ -2,10 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notnetflix/models/movie.dart';
 import 'package:notnetflix/repositories/data_repository.dart';
+import 'package:notnetflix/ui/widgets/action_button.dart';
+import 'package:notnetflix/ui/widgets/casting_card.dart';
+import 'package:notnetflix/ui/widgets/galerie_card.dart';
 import 'package:notnetflix/ui/widgets/movie_infos.dart';
+import 'package:notnetflix/ui/widgets/my_video_player.dart';
 import 'package:notnetflix/utils/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -47,15 +51,108 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                 size: 40,
               ),
             )
-          : ListView(
-              children: [
-                Container(
-                  height: 220,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.red,
-                ),
-                MovieInfos(movie: newMovie!),
-              ],
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: 220,
+                    width: MediaQuery.of(context).size.width,
+                    child: newMovie!.videos!.isEmpty
+                        ? Center(
+                            child: Text(
+                              "La vidéo n'est encore disponible",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : MyVideoPlayer(movieId: newMovie!.videos!.first),
+                  ),
+                  MovieInfos(movie: newMovie!),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ActionButton(
+                    label: 'Lecture',
+                    icon: Icons.play_arrow,
+                    bgColor: Colors.white,
+                    color: kBackgroundColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ActionButton(
+                    label: 'Télécharger la vidéo',
+                    icon: Icons.download,
+                    bgColor: Colors.grey.withOpacity(0.3),
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    newMovie!.overview,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Castings',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 350,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: newMovie!.casting!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return newMovie!.casting![index].imageURL == null
+                            ? const Center()
+                            : CastingCard(
+                                person: newMovie!.casting![index],
+                              );
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Galerrie',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    height: 350,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: newMovie!.images!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GalerieCard(
+                          posterPath: newMovie!.images![index],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
     );
   }

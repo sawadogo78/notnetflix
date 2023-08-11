@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:notnetflix/models/person.dart';
 
 import 'package:notnetflix/services/api.dart';
 
@@ -13,16 +14,21 @@ class Movie {
   final List<String>? genres;
   final String? realiseDate;
   final double? vote;
+  final List<String>? videos;
+  final List<Person>? casting;
+  final List<String>? images;
 
-  Movie({
-    required this.id,
-    required this.name,
-    required this.overview,
-    this.posterPath,
-    this.genres,
-    this.realiseDate,
-    this.vote,
-  });
+  Movie(
+      {required this.id,
+      required this.name,
+      required this.overview,
+      this.posterPath,
+      this.genres,
+      this.realiseDate,
+      this.vote,
+      this.videos,
+      this.casting,
+      this.images});
 
   Movie copyWith({
     int? id,
@@ -32,6 +38,9 @@ class Movie {
     List<String>? genres,
     String? realiseDate,
     double? vote,
+    List<String>? videos,
+    List<Person>? casting,
+    List<String>? images,
   }) {
     return Movie(
       id: id ?? this.id,
@@ -41,6 +50,9 @@ class Movie {
       genres: genres ?? this.genres,
       realiseDate: realiseDate ?? this.realiseDate,
       vote: vote ?? this.vote,
+      videos: videos ?? this.videos,
+      casting: casting ?? this.casting,
+      images: images ?? this.images,
     );
   }
 
@@ -54,6 +66,9 @@ class Movie {
       'genres': genres,
       'realiseDate': realiseDate,
       'vote': vote,
+      'videos': videos,
+      'casting': casting,
+      'images': images,
     };
   }
 
@@ -63,9 +78,6 @@ class Movie {
       name: map['title'],
       overview: map['overview'],
       posterPath: map['poster_path'],
-      // genres: map['genres'],
-      // realiseDate: map['release_date'],
-      // vote: map['vote_average'],
     );
   }
 

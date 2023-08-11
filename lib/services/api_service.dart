@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:notnetflix/models/movie.dart';
+import 'package:notnetflix/models/person.dart';
 import 'package:notnetflix/services/api.dart';
 
 class APIService {
@@ -107,7 +108,7 @@ class APIService {
   }
 
   Future<Movie> getMovieDetails({required Movie movie}) async {
-    Response response = await getData('movie/${movie.id}');
+    Response response = await getData('/movie/${movie.id}');
     if (response.statusCode == 200) {
       Map<String, dynamic> _data = response.data;
       var genres = _data['genres'] as List;
@@ -121,6 +122,51 @@ class APIService {
       );
 
       return newMovie;
+    } else {
+      throw response;
+    }
+  }
+
+  Future<Movie> getMovieVideos({required Movie movie}) async {
+    Response response = await getData('/movie/${movie.id}/videos');
+    if (response.statusCode == 200) {
+      Map _data = response.data;
+      List<String> videokeys = _data['results'].map<String>((videoJson) {
+        return videoJson['key'] as String;
+      }).toList();
+      return movie.copyWith(videos: videokeys);
+    } else {
+      throw response;
+    }
+  }
+
+  Future<Movie> getMovieCast({required Movie movie}) async {
+    Response response = await getData('/movie/${movie.id}/credits');
+    if (response.statusCode == 200) {
+      Map _data = response.data;
+      List<Person> _casting = _data['cast'].map<Person>((dynamic personJson) {
+        return Person.fromJson(personJson);
+      }).toList();
+      return movie.copyWith(casting: _casting);
+    } else {
+      throw response;
+    }
+  }
+
+  Future<Movie> getMovieImage({required Movie movie}) async {
+    Response response = await getData(
+      '/movie/${movie.id}/images',
+      params: {
+        'include_image_language': 'null',
+      },
+    );
+    if (response.statusCode == 200) {
+      Map _data = response.data;
+      List<String> _imagePath =
+          _data['backdrops'].map<String>((dynamic imageJson) {
+        return imageJson['file_path'] as String;
+      }).toList();
+      return movie.copyWith(images: _imagePath);
     } else {
       throw response;
     }

@@ -9,6 +9,7 @@ class MovieInfos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(
           height: 15.0,
@@ -40,7 +41,7 @@ class MovieInfos extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.7),
+                color: Colors.grey.withOpacity(0.33),
                 borderRadius: BorderRadius.circular(5.0),
               ),
               child: Text(
@@ -53,12 +54,12 @@ class MovieInfos extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 5.0,
+              width: 5.0,
             ),
             Text(
               "Recommandé à ${(movie.vote! * 10).toInt()}%",
               style: GoogleFonts.poppins(
-                color: Colors.white,
+                color: Colors.green,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
